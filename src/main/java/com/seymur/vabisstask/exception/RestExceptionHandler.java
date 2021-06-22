@@ -29,7 +29,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
-        return new ResponseEntity<>(new ApiResponse(false, new ErrorResponse(400, 400, Arrays.asList(ex.getMessage()))), HttpStatus.BAD_REQUEST);
+        ValidationFailedResponseDTO validationFailedResponseDTO = new ValidationFailedResponseDTO();
+        validationFailedResponseDTO.setTitle("Validasiya xətası.");
+        List<ViolationDetailDTO> violationDetailDTOS = new ArrayList<>();
+        ViolationDetailDTO violationDetailDTO = new ViolationDetailDTO();
+        violationDetailDTO.setRejectedField("username");
+        violationDetailDTO.setRejectedValue("Bu istifadəçi adı artıq mövcuddur.");
+        violationDetailDTOS.add(violationDetailDTO);
+        validationFailedResponseDTO.setViolations(violationDetailDTOS);
+        return new ResponseEntity<>(validationFailedResponseDTO, HttpStatus.valueOf(422));
     }
 
     @ExceptionHandler(WrongUserNameException.class)
@@ -44,6 +52,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ex.printStackTrace();
         BindingResult bindingResult = ex.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         ValidationFailedResponseDTO validationFailedResponseDTO = new ValidationFailedResponseDTO();

@@ -33,9 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse signUp(SignUpRequestDTO signUpRequestDTO) {
-        if (checkIfUserExists(signUpRequestDTO.getUsername())) {
+      /*  if (checkIfUserExists(signUpRequestDTO.getUsername())) {
             throw new UserAlreadyExistsException("user with username: " + signUpRequestDTO.getUsername() + " ,already exists");
-        }
+        }*/
         User user = new User();
         user.setUsername(signUpRequestDTO.getUsername());
         user.setPassword(passwordEncoder.encode(signUpRequestDTO.getPassword()));
