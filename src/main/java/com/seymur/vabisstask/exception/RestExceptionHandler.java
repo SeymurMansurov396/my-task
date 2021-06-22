@@ -5,6 +5,8 @@ import com.seymur.vabisstask.dto.response.ErrorResponse;
 import com.seymur.vabisstask.dto.response.ValidationFailedResponseDTO;
 import com.seymur.vabisstask.dto.response.ViolationDetailDTO;
 import com.seymur.vabisstask.exception.custom.UserAlreadyExistsException;
+import com.seymur.vabisstask.exception.custom.WrongPasswordException;
+import com.seymur.vabisstask.exception.custom.WrongUserNameException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ApiResponse(false, new ErrorResponse(400, 400, Arrays.asList(ex.getMessage()))), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(WrongUserNameException.class)
+    public ResponseEntity<?> handleWrongUserNameException(WrongUserNameException ex) {
+        return new ResponseEntity<>(new ApiResponse(false, new ErrorResponse(400, 400, Arrays.asList(ex.getMessage()))), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity<?> handleWrongPasswordException(WrongPasswordException ex) {
+        return new ResponseEntity<>(new ApiResponse(false, new ErrorResponse(400, 400, Arrays.asList(ex.getMessage()))), HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         BindingResult bindingResult = ex.getBindingResult();
@@ -46,4 +58,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         validationFailedResponseDTO.setViolations(violationDetailDTOS);
         return new ResponseEntity<>(validationFailedResponseDTO, HttpStatus.valueOf(422));
     }
+
+
 }
