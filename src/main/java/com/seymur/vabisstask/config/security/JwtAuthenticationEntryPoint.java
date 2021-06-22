@@ -4,6 +4,7 @@ package com.seymur.vabisstask.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seymur.vabisstask.dto.response.ApiResponse;
 import com.seymur.vabisstask.dto.response.ErrorResponse;
+import com.seymur.vabisstask.dto.response.UnAuthorizedResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -26,10 +27,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          AuthenticationException authException) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
 
-        ApiResponse apiResponse = new ApiResponse(false, new ErrorResponse(401, 401, Arrays.asList("Unauthorized")));
+    //    ApiResponse apiResponse = new ApiResponse(false, new ErrorResponse(401, 401, Arrays.asList("Unauthorized")));
+        UnAuthorizedResponseDTO unAuthorizedResponseDTO = new UnAuthorizedResponseDTO();
+        unAuthorizedResponseDTO.setTitle("Giriş qadağandır");
+        unAuthorizedResponseDTO.setDetail("Bu səhifəyə giriş üçün token əldə etməlisiniz");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        mapper.writeValue(response.getWriter(), apiResponse);
+        mapper.writeValue(response.getWriter(), unAuthorizedResponseDTO);
 
     }
 }
