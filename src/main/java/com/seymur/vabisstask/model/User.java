@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 
+@Getter
+@Setter
 @Entity
 public class User {
     @Id
@@ -25,5 +27,9 @@ public class User {
     @Column(name = "created", updatable = false)
     private LocalDateTime createDate;
 
+    @PrePersist
+    public void toCreate() {
+        setCreateDate(LocalDateTime.now());
+    }
 
 }
